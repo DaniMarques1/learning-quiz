@@ -37,16 +37,16 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!response.ok) {
                 if (response.status === 404) {
-                    console.warn("Não há mais questões.");
-                    questionTitleElement.textContent = 'Quiz Finalizado!';
-                    questionTextElement.textContent = 'Parabéns! 🎉';
+                    console.warn("There is no more questions.");
+                    questionTitleElement.textContent = 'Finished!';
+                    questionTextElement.textContent = 'Congratulations! 🎉';
                     cardsContainer.style.display = 'none';
                     nextButton.style.display = 'none';
                     translationInputElement.disabled = true;
                     restartButton.style.display = 'block';
                     return; 
                 }
-                throw new Error('Não foi possível carregar os dados da questão.');
+                throw new Error('Unable to load question data.');
             }
             
             const data = await response.json();
@@ -58,9 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
         } catch (error) {
-            console.error('Erro ao carregar a questão:', error);
+            console.error('Error loading question:', error);
             if (questionTitleElement) {
-                questionTitleElement.textContent = 'Erro ao carregar a questão';
+                questionTitleElement.textContent = 'Error loading question';
             }
         }
     }
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function checkAnswer() {
         if (!currentQuestionData) {
-            console.error("Dados da questão não carregados.");
+            console.error("Question data not loaded.");
             return;
         }
 
@@ -82,15 +82,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (correctAnswers.includes(userAnswer)) {
             answerCard.classList.add('correct');
-            answerCard.textContent = 'Resposta Correta!';
+            answerCard.textContent = 'Correct Answer!';
         } else {
             answerCard.classList.add('incorrect');
             const correctAnswerText = currentQuestionData.answer.join(' ou ');
-            answerCard.innerHTML = `Resposta Incorreta.<br><small>Correta: ${correctAnswerText}</small>`;
+            answerCard.innerHTML = `Incorrect Answer.<br><small>Correct: ${correctAnswerText}</small>`;
         }
         
         cardsContainer.classList.add('flipped');
-        nextButton.textContent = 'Próxima';
+        nextButton.textContent = 'Next';
         nextButton.removeEventListener('click', checkAnswer);
         nextButton.addEventListener('click', loadNextQuestion);
     }
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function loadNextQuestion() {
         cardsContainer.classList.remove('flipped');
         translationInputElement.value = '';
-        nextButton.textContent = 'Verificar';
+        nextButton.textContent = 'Verify';
         nextButton.removeEventListener('click', loadNextQuestion);
         nextButton.addEventListener('click', checkAnswer);
         
@@ -109,9 +109,6 @@ document.addEventListener('DOMContentLoaded', function() {
         loadQuestion(currentQuestionId);
     }
 
-    /**
-     * NOVO: Reinicia o quiz do começo.
-     */
     function restartQuiz() {
         currentQuestionId = 1; // Reseta o contador
 
@@ -127,8 +124,8 @@ document.addEventListener('DOMContentLoaded', function() {
         cardsContainer.classList.remove('flipped');
         translationInputElement.value = '';
 
-        // Garante que o botão "Verificar" esteja com a função e texto corretos
-        nextButton.textContent = 'Verificar';
+        // Garante que o botão "Verify" esteja com a função e texto corretos
+        nextButton.textContent = 'Verify';
         nextButton.removeEventListener('click', loadNextQuestion); // Remove o listener antigo se houver
         nextButton.addEventListener('click', checkAnswer); // Adiciona o listener inicial
 
@@ -138,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Adiciona os listeners iniciais aos botões
     nextButton.addEventListener('click', checkAnswer);
-    restartButton.addEventListener('click', restartQuiz); // NOVO: Adiciona o evento ao botão de refazer
+    restartButton.addEventListener('click', restartQuiz);
     
     // Chama a função para carregar a PRIMEIRA questão quando a página abre
     loadQuestion(currentQuestionId);
